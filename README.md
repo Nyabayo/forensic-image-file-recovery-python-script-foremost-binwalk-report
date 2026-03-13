@@ -55,9 +55,10 @@ I installed all the tools I needed:
 sudo apt update && sudo apt install foremost binwalk -y
 ```
 
-![Installing Foremost and Binwalk](images/01_install_tools.png)
+<img width="798" height="350" alt="image" src="https://github.com/user-attachments/assets/6467677f-c189-4e5b-b179-0cb75e088c01" />
 
-![Installation Complete](images/02_install_tools_2.png)
+<img width="662" height="62" alt="image" src="https://github.com/user-attachments/assets/e7e9de35-6a37-4937-98cd-f286e66bbc0f" />
+
 
 ---
 
@@ -69,7 +70,8 @@ sudo apt update && sudo apt install foremost binwalk -y
 file carveit
 ```
 
-![file carveit output](images/03_file_check.png)
+<img width="569" height="77" alt="image" src="https://github.com/user-attachments/assets/9216e40c-4fc6-4cd1-8f4f-2e84e9f0705c" />
+
 
 > **Result:** `carveit: ASCII text, with very long lines (65536), with no line terminators`
 
@@ -81,7 +83,8 @@ file carveit
 fdisk -l carveit
 ```
 
-![fdisk -l carveit output](images/04_fdisk_output.png)
+<img width="546" height="62" alt="image" src="https://github.com/user-attachments/assets/98085267-a7d7-4872-b6a2-ee75a64188ec" />
+
 
 > **Result:** Disk size of **15.78 MiB**, **32327 sectors**, each sector 512 bytes.
 
@@ -93,7 +96,8 @@ fdisk -l carveit
 sudo fls -r carveit
 ```
 
-![sudo fls -r carveit output](images/05_fls_output.png)
+<img width="448" height="86" alt="image" src="https://github.com/user-attachments/assets/3368aae3-2404-426e-bb5b-d85eb5fdd0cf" />
+
 
 > **Result:** `Possible encryption detected (High entropy (7.85))`
 
@@ -107,13 +111,15 @@ sudo fls -r carveit
 foremost -i carveit -o recovered_files
 ```
 
-![foremost running](images/06_foremost_run.png)
+<img width="627" height="170" alt="image" src="https://github.com/user-attachments/assets/c559a0f9-6c0b-46eb-b32c-55ea521463fe" />
+
 
 ```bash
 ls -l recovered_files
 ```
 
-![ls -l recovered_files output](images/07_ls_recovered_files.png)
+<img width="791" height="217" alt="image" src="https://github.com/user-attachments/assets/7bcdfd91-b4b7-41e1-acf5-107fccc49be6" />
+
 
 > Foremost created recovery folders: `docx`, `gif`, `jpg`, `pdf`, `png`
 
@@ -125,7 +131,8 @@ ls -l recovered_files
 binwalk -e carveit
 ```
 
-![binwalk -e carveit output](images/08_binwalk_output.png)
+<img width="538" height="98" alt="image" src="https://github.com/user-attachments/assets/2bcf91a3-103f-4137-a60b-e43b4f6fa501" />
+
 
 > Binwalk detected several ZIP archive blocks containing DOCX components: `document.xml`, `image1.png`, XML metadata files.
 
@@ -133,7 +140,8 @@ binwalk -e carveit
 ls _carveit.extracted
 ```
 
-![ls _carveit.extracted output](images/09_carveit_extracted.png)
+<img width="496" height="94" alt="image" src="https://github.com/user-attachments/assets/a482b796-9c64-4d60-8d9d-f16b7dbabbf4" />
+
 
 > Extracted files: `8924z`, `8924.zlib`, `0C73E0`, `0C73E0.zlib`
 
@@ -147,7 +155,8 @@ ls _carveit.extracted
 xxd carveit | egrep "89 ?50 ?4e ?47 ?0d ?0a ?1a ?0a"
 ```
 
-![PNG header search output](images/10_png_header_search.png)
+<img width="549" height="68" alt="image" src="https://github.com/user-attachments/assets/e94953d1-241d-4bdd-b9ca-cc3eb57307af" />
+
 
 > **PNG header found at offset:** `0x00dc7390`
 
@@ -159,7 +168,8 @@ xxd carveit | egrep "89 ?50 ?4e ?47 ?0d ?0a ?1a ?0a"
 xxd carveit | egrep "49 ?45 ?4e ?44 ?ae ?42 ?60 ?82"
 ```
 
-![PNG footer search output](images/11_png_footer_search.png)
+<img width="532" height="122" alt="image" src="https://github.com/user-attachments/assets/b71b4461-5515-4dc0-a338-406db0bcaf79" />
+
 
 > **PNG footer found at:**
 > - `0x001def20` ← used as end offset
@@ -174,7 +184,8 @@ printf '%d\n' 0x00dc7390   # Start offset → 14447504
 printf '%d\n' 0x001def20   # End offset   → 1961760
 ```
 
-![printf hex to decimal output](images/12_printf_start_offset.png)
+<img width="593" height="79" alt="image" src="https://github.com/user-attachments/assets/61864f08-9a11-40f6-bdd1-98db771096f1" />
+
 
 ---
 
@@ -184,7 +195,8 @@ printf '%d\n' 0x001def20   # End offset   → 1961760
 dd if=carveit of=recovered_png.png bs=1 skip=14583472 count=14360040
 ```
 
-![dd extract output](images/13_dd_extract.png)
+<img width="479" height="405" alt="image" src="https://github.com/user-attachments/assets/3c93cd0d-b09d-4c74-81f1-3f85d0ec8f11" />
+
 
 > ✅ PNG file successfully extracted as `recovered_png.png`
 
@@ -209,13 +221,6 @@ I developed a custom Python script to automate the full carving pipeline.
 ```bash
 python3 OSINDO.py ~/Documents/carveit
 ```
-
-![Python script running](images/14_python_script_run.png)
-
-![Python script output results](images/15_script_output_results.png)
-
-![Recovered files folder contents](images/16_recovered_files_folder.png)
-
 ---
 
 ## 📊 File Signatures Identified
@@ -232,8 +237,6 @@ python3 OSINDO.py ~/Documents/carveit
 ---
 
 ## 📋 All Commands Summary
-
-![All commands summary](images/17_all_commands_summary.png)
 
 ```bash
 # Step 1: Check the disk file type
@@ -337,15 +340,12 @@ I ran `md5sum` on each recovered file and compared the result against the hash i
 md5sum ~/Documents/OSINDO_recovered_files/recovered_PNG_758970.bin
 ```
 
-![MD5 verification part 1](images/18_md5sum_verification_1.png)
+<img width="483" height="409" alt="image" src="https://github.com/user-attachments/assets/e6fbf9d8-9331-444f-a838-dbee242127bc" />
 
-![MD5 verification part 2](images/19_md5sum_verification_2.png)
 
-![MD5 verification part 3](images/20_md5sum_verification_3.png)
+<img width="483" height="409" alt="image" src="https://github.com/user-attachments/assets/8c3d2f11-9cad-4107-988d-4cc7836cf5d1" />
 
-![MD5 verification part 4](images/21_md5sum_verification_4.png)
 
-![MD5 verification part 5](images/22_md5sum_verification_5.png)
 
 **Verification Results:**
 
@@ -369,7 +369,8 @@ md5sum ~/Documents/OSINDO_recovered_files/recovered_PNG_758970.bin
 xdg-open ~/Documents/OSINDO_recovered_files/recovered_JPG_117768.bin
 ```
 
-![Image viewer showing recovered JPG files](images/23_image_viewer_jpg.png)
+<img width="425" height="388" alt="image" src="https://github.com/user-attachments/assets/94e71f4a-2425-449e-93ea-3061e5295c39" />
+
 
 > ✅ Most JPG files opened successfully — image shows puppies in a basket (735 x 585, 40.8kB)  
 > ❌ `recovered_JPG_190815.bin` — *Error interpreting JPEG image (improper call to JPEG library in state 201)*  
@@ -379,7 +380,8 @@ xdg-open ~/Documents/OSINDO_recovered_files/recovered_JPG_117768.bin
 
 #### PDF Files
 
-![PDF file readable](images/24_pdf_readable.png)
+<img width="663" height="302" alt="image" src="https://github.com/user-attachments/assets/5bbc5905-f5c3-45d0-9835-fee0ddead6c2" />
+
 
 > ✅ `recovered_PDF_495315.bin` — Fully readable. Content: *"Is the Vizsla the Right Breed for You?"*
 
@@ -387,9 +389,11 @@ xdg-open ~/Documents/OSINDO_recovered_files/recovered_JPG_117768.bin
 
 #### ZIP Files
 
-![ZIP files unzipped terminal output](images/25_zip_unzipped.png)
+<img width="668" height="234" alt="image" src="https://github.com/user-attachments/assets/2343497d-8673-43c7-bff6-c4a37a03d85d" />
 
-![ZIP file contents in file manager](images/26_zip_compressed.png)
+
+<img width="665" height="213" alt="image" src="https://github.com/user-attachments/assets/fbd172ef-c39d-4046-a051-0d5d5ef794a9" />
+
 
 > ✅ All ZIP archives extracted successfully using `unzip`  
 > Contents confirmed as **Microsoft Word 2007+ DOCX** files containing `_rels`, `docProps`, `word` directories
@@ -424,8 +428,8 @@ zip -r ~/Documents/OSINDO_recovered_files.zip \
 | 1 | `carveit` — Forensic disk image | ✅ Included in repository |
 | 2 | `OSINDO.py` — Python carving script | ✅ Included in repository |
 | 3 | `hashes.txt` — MD5 hashes of all recovered files | ✅ Included in repository |
-| 4 | `OSINDO_recovered_files.zip` — Recovered files archive | ✅ Submitted via Canvas (174MB) |
-| 5 | Forensic Report — Full investigation report | ✅ Submitted via Canvas |
+| 4 | `Walkthrough pdf` - Forensic Disk Image File Recovery | ✅ Included in repository |
+| 5 | Forensic Report — Full investigation report | ✅ Included in repository |
 
 ---
 
