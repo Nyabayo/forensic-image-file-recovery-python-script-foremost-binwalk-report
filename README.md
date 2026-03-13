@@ -1,9 +1,5 @@
 # 🔍 Forensic Image File Recovery — Python Script, Foremost, Binwalk & Report
 
-**Name:** Ernest Nyabayo Osindo  
-**Date:** 13/03/2026  
-**Role:** Junior Digital Forensics Analyst
-
 ---
 
 ## 📌 Overview
@@ -436,6 +432,6 @@ zip -r ~/Documents/OSINDO_recovered_files.zip \
 ## 👤 Author
 
 **Ernest Nyabayo Osindo**  
-Junior Digital Forensics Analyst  
+ 
 📅 13/03/2026  
-🔗 [GitHub Profile](https://github.com/Nyabayo)
+🔗 https://github.com/Nyabayo/forensic-image-file-recovery-python-script-foremost-binwalk-report.git
